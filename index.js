@@ -25,8 +25,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/products', async (req, res) => {
-  const products = await Product.find({});
-  res.render('products/index', { products });
+  const { query} = req.query;
+  if (query) {
+    const products = await Product.find({ category: query });
+    res.render('products/index', { products, category: query });
+  } else {
+    const products = await Product.find({});
+    res.render('products/index', { products, category: 'All' });
+  }
 })
 
 app.get('/products/create', (req, res) => {
